@@ -4,6 +4,7 @@ session_start();
 
 $error = '';
 
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   if (isset($_POST['action']) && $_POST['action'] === 'signup') {
     $name = $_POST['name'];
@@ -48,23 +49,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 ?>
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Customer Auth - BookEasy</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
       padding: 0;
       font-family: 'Poppins', sans-serif;
-      background: linear-gradient(135deg, #F4F1EB, #B7BDB7);
-      height: 100vh;
+      background: #f4f4f4;
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
-      color: #050315;
-      overflow: hidden;
     }
 
     nav {
@@ -81,28 +84,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       font-size: 1.5rem;
       font-weight: 600;
       color: white;
-      margin-left: 20px;
     }
 
     .auth-container {
-      margin-top: 4vh;
-      background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(12px);
+      background: #ffffff;
       border-radius: 20px;
-      padding: 40px;
-      width: 360px;
-      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      transition: all 0.3s ease;
-      animation: fadeIn 0.8s ease;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 400px;
+      padding: 40px 30px;
+      text-align: center;
+      margin-top: 5vh;
+      animation: fadeIn 0.7s ease;
     }
 
     @keyframes fadeIn {
       from {
         opacity: 0;
-        transform: translateY(30px);
+        transform: translateY(20px);
       }
-
       to {
         opacity: 1;
         transform: translateY(0);
@@ -110,22 +110,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     h2 {
-      text-align: center;
       color: #1E0D73;
-      margin-bottom: 20px;
+      font-size: 24px;
+      margin-bottom: 30px;
+      line-height: 1.4;
     }
 
     input[type="text"],
     input[type="email"],
     input[type="password"] {
       width: 100%;
-      padding: 12px;
+      padding: 14px;
       margin: 10px 0;
       border: 1px solid #ccc;
-      border-radius: 12px;
+      border-radius: 10px;
       font-size: 15px;
-      background: #ffffffdd;
-      transition: border-color 0.3s ease;
+      background: #fdfdfd;
+      transition: border 0.3s ease;
     }
 
     input:focus {
@@ -135,57 +136,56 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     button {
       width: 100%;
-      padding: 12px;
+      padding: 14px;
       background-color: #1E0D73;
       color: white;
       border: none;
       border-radius: 12px;
       font-size: 16px;
-      font-weight: 500;
+      font-weight: 600;
       cursor: pointer;
-      margin-top: 10px;
-      transition: background-color 0.3s ease, transform 0.2s ease;
+      margin-top: 20px;
+      transition: all 0.3s ease;
     }
 
     button:hover {
       background-color: #15095d;
-      transform: scale(1.03);
+      transform: translateY(-2px);
     }
 
     .switch-link {
-      margin-top: 15px;
-      text-align: center;
+      margin-top: 20px;
       font-size: 14px;
+      color: #1E0D73;
     }
 
     .switch-link a {
-      color: #FF9800;
-      text-decoration: none;
+      color: #1E0D73;
       font-weight: 600;
-      transition: color 0.3s ease;
+      text-decoration: none;
     }
 
     .switch-link a:hover {
-      color: #e68500;
+      text-decoration: underline;
     }
 
     .error {
       color: red;
-      text-align: center;
-      margin-bottom: 15px;
       font-size: 14px;
+      margin-bottom: 10px;
     }
   </style>
 </head>
-
 <body>
+
   <nav>
     <div class="logo">BookEasy</div>
   </nav>
+
   <div class="auth-container">
-    <h2 id="form-title">Login</h2>
-    <?php if ($error)
-      echo '<p class="error">' . htmlspecialchars($error) . '</p>'; ?>
+    <h2 id="form-title">Login to Your Account</h2>
+    <?php if ($error) echo '<p class="error">' . htmlspecialchars($error) . '</p>'; ?>
+    
     <form method="POST" id="auth-form">
       <input type="hidden" name="action" value="login" id="form-action">
 
@@ -197,9 +197,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <input type="text" name="phone" placeholder="Phone Number">
       </div>
 
-      <input type="email" name="email" placeholder="Email" required>
+      <input type="email" name="email" placeholder="Email Address" required>
       <input type="password" name="password" placeholder="Password" required>
-      <button type="submit">Submit</button>
+
+      <button type="submit">Login</button>
+
       <div class="switch-link">
         <a href="#" id="toggle-form">Don't have an account? Sign up</a><br>
         <a href="forgot_password.php">Forgot Password?</a>
@@ -213,16 +215,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     const formAction = document.getElementById('form-action');
     const nameField = document.getElementById('name-field');
     const phoneField = document.getElementById('phone-field');
+    const submitButton = document.querySelector("button");
 
-    toggleLink.addEventListener('click', () => {
+    toggleLink.addEventListener('click', (e) => {
+      e.preventDefault();
       const isLogin = formAction.value === 'login';
       formAction.value = isLogin ? 'signup' : 'login';
-      formTitle.textContent = isLogin ? 'Sign Up' : 'Login';
+      formTitle.innerHTML = isLogin ? 'Create Your Account' : 'Login to Your Account';
       nameField.style.display = isLogin ? 'block' : 'none';
       phoneField.style.display = isLogin ? 'block' : 'none';
-      toggleLink.textContent = isLogin ? 'Already have an account? Login' : "Don't have an account? Sign up";
+      submitButton.textContent = isLogin ? 'Sign Up' : 'Login';
+      toggleLink.innerHTML = isLogin ? 'Already have an account? Login' : "Don't have an account? Sign up";
     });
   </script>
-</body>
 
+</body>
 </html>

@@ -9,7 +9,6 @@ $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   if (isset($_POST['phone'])) {
-    // Step 1: User submitted phone
     $phone = $_POST['phone'];
     $_SESSION['reset_phone'] = $phone;
 
@@ -23,7 +22,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $otp = rand(100000, 999999);
       $_SESSION['reset_otp'] = $otp;
 
-      // Save OTP
       $update = $conn->prepare("UPDATE customers SET otp = ? WHERE phone = ?");
       $update->bind_param("ss", $otp, $phone);
       $update->execute();
@@ -35,7 +33,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $error = "No user found with that phone.";
     }
   } elseif (isset($_POST['otp'])) {
-    // Step 2: Verify OTP
     $entered_otp = $_POST['otp'];
     $phone = $_SESSION['reset_phone'];
 
@@ -53,7 +50,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $stage = 'otp';
     }
   } elseif (isset($_POST['new_password'])) {
-    // Step 3: Reset Password
     $phone = $_SESSION['reset_phone'];
     $new_password = $_POST['new_password'];
     $hashed = password_hash($new_password, PASSWORD_BCRYPT);
@@ -76,48 +72,101 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <title>Reset Password - BookEasy</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
+    * { box-sizing: border-box; }
+
     body {
-      margin: 0; padding: 0;
+      margin: 0;
       font-family: 'Poppins', sans-serif;
-      background: linear-gradient(to right, #F4F1EB, #B7BDB7);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh; color: #050315;
+      background: #f4f4f4;
+      color: #050315;
     }
+
+    nav {
+      background-color: #1E0D73;
+      padding: 1rem 2rem;
+      color: white;
+      font-weight: 600;
+      font-size: 1.2rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: white;
+    }
+
     .container {
-      background: rgba(255,255,255,0.25);
+      background: rgba(255, 255, 255, 0.25);
       backdrop-filter: blur(10px);
       padding: 40px 30px;
-      max-width: 400px; width: 100%;
+      max-width: 400px;
+      width: 100%;
       border-radius: 20px;
-      box-shadow: 0 8px 32px rgba(31,38,135,0.2);
-      border: 1px solid rgba(255,255,255,0.18);
+      box-shadow: 0 8px 32px rgba(31, 38, 135, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.18);
       text-align: center;
+      margin: 5vh auto;
     }
-    h2 { margin-bottom: 24px; color: #1E0D73; font-size: 26px; }
-    input[type="text"], input[type="password"] {
-      width: 93%; padding: 14px;
-      margin-bottom: 20px; border-radius: 12px;
-      border: 1px solid #ccc; font-size: 16px;
+
+    h2 {
+      margin-bottom: 24px;
+      color: #1E0D73;
+      font-size: 26px;
     }
+
+    input[type="text"],
+    input[type="password"] {
+      width: 93%;
+      padding: 14px;
+      margin-bottom: 20px;
+      border-radius: 12px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+
     button {
-      width: 100%; padding: 14px;
-      background-color: #1E0D73; color: white;
-      border: none; border-radius: 12px;
-      font-size: 16px; cursor: pointer;
+      width: 100%;
+      padding: 14px;
+      background-color: #1E0D73;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      cursor: pointer;
     }
-    button:hover { background-color: #15095d; }
-    .message { margin-top: 15px; font-size: 14px; color: green; }
-    .error { margin-top: 15px; font-size: 14px; color: red; }
+
+    button:hover {
+      background-color: #15095d;
+    }
+
+    .message {
+      margin-top: 15px;
+      font-size: 14px;
+      color: green;
+    }
+
+    .error {
+      margin-top: 15px;
+      font-size: 14px;
+      color: red;
+    }
+
     a.back-link {
-      display: inline-block; margin-top: 25px;
-      text-decoration: none; color: #FF9800;
+      display: inline-block;
+      margin-top: 25px;
+      text-decoration: none;
+      color: #FF9800;
       font-weight: bold;
     }
   </style>
 </head>
 <body>
+
+  <nav>
+    <div class="logo">BookEasy</div>
+  </nav>
+
   <div class="container">
     <h2>Reset Password</h2>
     <?php if ($message) echo "<p class='message'>$message</p>"; ?>

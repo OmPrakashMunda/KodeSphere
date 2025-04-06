@@ -175,7 +175,7 @@
     <div class="business-profile">
       <form class="business-details-form" method="POST" action="update_business.php" enctype="multipart/form-data">
         <div class="image-upload-section">
-          <img src="<?php echo file_exists($business['image']) ? $business['image'] : '../assets/default-business.jpg'; ?>" alt="Business Image" id="business-image">
+          <img src="<?php echo file_exists('./images/'.$business['image']) ? './images/'.$business['image'] : '../assets/default-business.jpg'; ?>" alt="Business Image" id="business-image">
           <input type="file" id="upload-image" name="image" accept="image/*">
         </div>
 

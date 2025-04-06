@@ -1,4 +1,8 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 include '../utils/php/db.php';
 session_start();
 
@@ -6,6 +10,22 @@ if (!isset($_SESSION['customer_logged_in'])) {
   header('Location: index.php');
   exit();
 }
+
+$customer_email = $_SESSION['customer_email'];
+$customer_name = '';
+$customer_phone = '';
+
+// Get logged-in customer's details
+$stmt_user = $conn->prepare("SELECT name, phone FROM customers WHERE email = ?");
+$stmt_user->bind_param("s", $customer_email);
+$stmt_user->execute();
+$user_result = $stmt_user->get_result();
+if ($user_result && $user_result->num_rows > 0) {
+  $user = $user_result->fetch_assoc();
+  $customer_name = $user['name'];
+  $customer_phone = $user['phone'];
+}
+$stmt_user->close();
 
 $business_id = $_GET['business_id'] ?? null;
 $success = false;
@@ -23,9 +43,6 @@ if ($business_id) {
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $business_id = $_POST['business_id'];
-  $customer_name = $_POST['customer_name'];
-  $customer_phone = $_POST['customer_phone'];
-  $customer_email = $_POST['customer_email'];
   $slot_time = $_POST['slot_time'];
   $service = $_POST['service'];
   $notes = $_POST['notes'];
@@ -33,13 +50,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $booking_code = uniqid('BOOK');
 
   $stmt = $conn->prepare("INSERT INTO bookings (booking_code, business_id, customer_name, customer_phone, customer_email, slot_time, service, notes, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+  if (!$stmt) {
+    die("Prepare failed: (" . $conn->errno . ") " . $conn->error);
+  }
+
   $stmt->bind_param("sisssssss", $booking_code, $business_id, $customer_name, $customer_phone, $customer_email, $slot_time, $service, $notes, $created_at);
 
   if ($stmt->execute()) {
     $success = true;
 
-    // Fetch business phone number
-    $stmt2 = $conn->prepare("SELECT name, phone FROM businesses WHERE id = ?");
+    // Fetch business phone number - FIX: Proper parameterized query
+    $stmt2 = $conn->prepare("SELECT business_name, phone FROM businesses WHERE id = ?");
     $stmt2->bind_param("i", $business_id);
     $stmt2->execute();
     $res2 = $stmt2->get_result();
@@ -47,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt2->close();
 
     $biz_phone = $bizData['phone'];
-    $biz_name = $bizData['name'];
+    $biz_name = $bizData['business_name']; // Fixed variable name to match the SELECT statement
 
     // Format WhatsApp message
     $message = "📢 New Booking on BookEasy!\n\n"
@@ -71,15 +92,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
   <title>Book Appointment</title>
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
-      padding: 0px;
-      margin: 0px;
+      padding: 0;
+      margin: 0;
       background-color: #f9f9f9;
       color: #333;
     }
@@ -128,6 +148,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       font-size: 14px;
     }
 
+    input[readonly] {
+      background-color: #eee;
+    }
+
     button {
       padding: 10px 16px;
       background-color: #FF9800;
@@ -154,8 +178,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       padding: 6px;
       background: white;
     }
-  </style>
-  <style>
+
     .navbar {
       background-color: #1E0D73;
       color: white;
@@ -185,7 +208,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       background-color: #eee;
     }
   </style>
-
 </head>
 
 <body>
@@ -212,23 +234,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="success">
       <h2>✅ Booking Successful!</h2>
       <p><strong>Your Booking Code:</strong></p>
-      <p><?= $booking_code ?></p>
-      <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=<?= urlencode($booking_code) ?>"
-        alt="QR Code for Booking">
+      <p><?= htmlspecialchars($booking_code) ?></p>
+      <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=<?= urlencode($booking_code) ?>" alt="QR Code for Booking">
     </div>
   <?php else: ?>
     <form method="POST">
       <input type="hidden" name="business_id" value="<?= htmlspecialchars($business_id) ?>" required>
-      <input type="text" name="customer_name" placeholder="Your Name" required>
-      <input type="text" name="customer_phone" placeholder="Phone Number" required>
-      <input type="email" name="customer_email" placeholder="Email Address" required>
+      <input type="text" name="customer_name" value="<?= htmlspecialchars($customer_name) ?>" placeholder="Your Name" readonly>
+      <input type="text" name="customer_phone" value="<?= htmlspecialchars($customer_phone) ?>" placeholder="Phone Number" readonly>
+      <input type="email" name="customer_email" value="<?= htmlspecialchars($customer_email) ?>" placeholder="Email Address" readonly>
       <input type="datetime-local" name="slot_time" required>
       <input type="text" name="service" placeholder="Service (e.g., Haircut)" required>
       <textarea name="notes" placeholder="Any notes..."></textarea>
       <button type="submit">Book Appointment</button>
     </form>
   <?php endif; ?>
-
 </body>
-
 </html>

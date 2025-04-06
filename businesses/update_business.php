@@ -1,4 +1,12 @@
 <?php
+echo "<pre>";
+print_r($_FILES);
+echo "</pre>";
+
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 session_start();
 if (!isset($_SESSION['business_logged_in'])) {
     header('Location: login.php');
@@ -37,6 +45,7 @@ if (isset($_FILES['image']) && $_FILES['image']['error'] === 0) {
         $filename = $business_id . "." . $ext;
         $target_file = $target_dir . $filename;
 
+
         if (move_uploaded_file($_FILES['image']['tmp_name'], $target_file)) {
             $image_path = $filename; // Save only filename in DB
         }
@@ -47,7 +56,6 @@ $update_stmt = $conn->prepare("UPDATE businesses SET business_name = ?, phone = 
 $update_stmt->bind_param("sssssssi", $name, $phone, $slots, $working_days, $working_hours_start, $working_hours_end, $image_path, $business_id);
 $update_stmt->execute();
 $update_stmt->close();
-
 header("Location: index.php");
 exit();
 ?>
