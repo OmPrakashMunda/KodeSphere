@@ -1,0 +1,219 @@
+/* === Global Reset & Fonts === */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body, html {
+  font-family: 'Poppins', sans-serif;
+  height: 100%;
+  background-color: #F4F1EB;
+  color: #050315;
+}
+
+/* === Navbar (Used in index.php) === */
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 40px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+nav .logo {
+  font-family: 'Futura', sans-serif;
+  font-size: 24px;
+  font-weight: bold;
+  color: #1E0D73;
+}
+
+nav .profile-btn {
+  background-color: transparent;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+  color: #1E0D73;
+}
+
+/* === Homepage Layout === */
+.container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 20px;
+  background: linear-gradient(135deg, #F4F1EB 40%, #B7BDB7 100%);
+  position: relative;
+}
+
+.title {
+  font-family: 'Futura', sans-serif;
+  font-size: 48px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.subtitle {
+  font-size: 20px;
+  font-weight: 300;
+  margin-bottom: 40px;
+  max-width: 600px;
+}
+
+.slogan {
+  font-size: 18px;
+  font-weight: 400;
+  margin-bottom: 20px;
+  color: #1E0D73;
+}
+
+.button-group {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.main-btn {
+  background-color: #1E0D73;
+  color: #fff;
+  font-size: 18px;
+  padding: 15px 25px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-weight: 600;
+}
+
+.main-btn:hover {
+  background-color: #15095d;
+}
+
+.lottie-container {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  width: 150px;
+  height: 150px;
+}
+
+/* === Auth Page Layout (Login, Register, Forgot) === */
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f2f2f2;
+  padding: 30px;
+}
+
+.auth-card {
+  background-color: #fff;
+  padding: 40px;
+  width: 100%;
+  max-width: 460px;
+  border-radius: 16px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+}
+
+.auth-card h2 {
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 26px;
+  color: #1E0D73;
+  font-weight: 600;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.input-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.input-field label {
+  font-size: 15px;
+  margin-bottom: 6px;
+  color: #333;
+  font-weight: 500;
+}
+
+.input-field input,
+.input-field select {
+  padding: 12px 14px;
+  font-size: 15px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  transition: border-color 0.3s;
+}
+
+.input-field input:focus,
+.input-field select:focus {
+  outline: none;
+  border-color: #1E0D73;
+}
+
+.auth-btn {
+  background-color: #1E0D73;
+  color: #fff;
+  padding: 14px;
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background 0.3s;
+}
+
+.auth-btn:hover {
+  background-color: #15095d;
+}
+
+.auth-links {
+  text-align: center;
+  margin-top: 15px;
+  font-size: 14px;
+}
+
+.auth-links a {
+  color: #1E0D73;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.auth-links a:hover {
+  text-decoration: underline;
+}
+
+/* === Responsive === */
+@media (max-width: 600px) {
+  .title {
+    font-size: 36px;
+  }
+  .subtitle {
+    font-size: 16px;
+  }
+  .main-btn {
+    font-size: 16px;
+    padding: 12px 20px;
+  }
+  .lottie-container {
+    width: 100px;
+    height: 100px;
+  }
+  .auth-card {
+    padding: 25px;
+  }
+}

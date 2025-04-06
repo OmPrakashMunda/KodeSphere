@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BookEasy</title>
+    <!-- <link rel="stylesheet" href="utils/styles.css" /> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.0/lottie.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background-color: #F4F1EB;
+            color: #050315;
+        }
+
+        nav {
+            background-color: #1E0D73;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: white;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            padding: 3rem 2rem;
+        }
+
+        .content {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .text-section {
+            flex: 1 1 500px;
+            padding: 1rem;
+        }
+
+        .title {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: #1E0D73;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #333;
+            margin: 1rem 0;
+        }
+
+        .slogan {
+            font-weight: 500;
+            color: #FF9800;
+            margin-bottom: 2rem;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .main-btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            background-color: #1E0D73;
+            color: white;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .main-btn:hover {
+            background-color: #150a50;
+            transform: translateY(-2px);
+        }
+
+        .main-btn.secondary {
+            background-color: #FF9800;
+            color: white;
+        }
+
+        .main-btn.secondary:hover {
+            background-color: #e58900;
+        }
+
+        .lottie-section {
+            position: relative;
+        }
+
+        .lottie-container {
+            position: absolute;
+            top: 200px;
+            right: 100px;
+            transform: translate(-50%, -50%);
+            width: 500px;
+            height: 500px;
+            z-index: -1;
+            opacity: 0.8;
+            pointer-events: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <div class="logo">BookEasy</div>
+    </nav>
+
+    <div class="container">
+        <div class="content">
+            <div class="text-section">
+                <h1 class="title">Welcome to BookEasy</h1>
+                <p class="subtitle">Effortlessly connecting businesses to customers through modern digital experiences.
+                </p>
+                <p class="slogan">Connecting business to customers 🌐</p>
+
+                <div class="button-group">
+                    <button class="main-btn">For Business Owners</button>
+                    <button class="main-btn secondary">For Customers</button>
+                </div>
+            </div>
+            <div class="lottie-section">
+                <div class="lottie-container" id="lottie-player"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Load lottie animation
+        lottie.loadAnimation({
+            container: document.getElementById('lottie-player'),
+            renderer: 'svg',
+            loop: true,
+            autoplay: true,
+            path: 'utils/animation.json' // Replace with your Lottie JSON path
+        });
+    </script>
+    <script src="utils/main.js"></script>
+</body>
+
+</html>
